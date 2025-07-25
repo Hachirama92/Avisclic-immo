@@ -33,17 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
         companyLogo.classList.add('hidden'); // S'assurer qu'il est caché s'il n'y a pas de logo
     }
 
-    // ⭐⭐⭐ INFORMATIONS PRÉCISES POUR TON GOOGLE FORM IMMOBILIER ⭐⭐⭐
-    // Ces IDs ont été extraits de ton formulaire "Feedback AvisClic Immo"
-    const GOOGLE_FORM_ACTION_URL = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSc_Yep8FBpyDfZRs0bgTDz1AV1h3d7FLdQ6MgncFdNdYROGUg/formResponse'; 
+    // ⭐⭐⭐ INFORMATIONS PRÉCISES POUR FORMSPREE IMMOBILIER ⭐⭐⭐
+    // Ton URL Formspree fournie :
+    const FORMSPREE_ACTION_URL = 'https://formspree.io/f/xqalqbnn'; 
+    
+    // Noms des champs pour Formspree :
     const FORM_FIELD_NAMES = {
-        note: 'entry.1825203782',           // Note de l'expérience
-        options: 'entry.1148647656',        // Options d'amélioration
-        commentaire: 'entry.39037695',      // Commentaire Libre
-        nomEntreprise: 'entry.161944146',   // Nom de l'entreprise (Auto)
-        urlLogo: 'entry.200445465',         // URL Logo (Auto)
+        note: 'Note_de_l_experience',             
+        options: 'Options_d_amelioration',        
+        commentaire: 'Commentaire_Libre',      
+        nomEntreprise: 'Nom_Entreprise_Client',   
+        urlLogo: 'URL_Logo_Client',         
     };
-    // ⭐⭐⭐ FIN DES INFOS PRÉCISES IMMO ⭐⭐⭐
+    // ⭐⭐⭐ FIN DES INFOS PRÉCISES FORMSPREE IMMO ⭐⭐⭐
+
 
     // Fonction pour mettre à jour l'affichage des étoiles
     function updateStarDisplay(ratingValue) { 
@@ -141,53 +144,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- CETTE SECTION ENVOIE LES DONNÉES À GOOGLE FORMS VIA IFRAME ---
-    submitLowScoreButton.addEventListener('click', () => { // Plus besoin de 'async'
+    // --- CETTE SECTION ENVOIE LES DONNÉES À FORMSPREE ---
+    submitLowScoreButton.addEventListener('click', async () => { 
         const comments = otherFeedbackTextarea.value.trim();
         
-        // Créer un formulaire temporaire pour envoyer les données
-        const form = document.createElement('form');
-        form.action = GOOGLE_FORM_ACTION_URL;
-        form.method = 'POST';
-        form.target = 'hidden_iframe'; // Cible l'iframe caché
-        
-        // Ajouter le formulaire temporaire au corps du document D'ABORD
-        document.body.appendChild(form); // <-- Assurer qu'il est dans le DOM avant de remplir/soumettre
-
-        // Ajouter les champs cachés au formulaire temporaire
-        const addHiddenField = (name, value) => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = value;
-            form.appendChild(input);
-        };
-
-        addHiddenField(FORM_FIELD_NAMES.note, selectedRating);
+        const formData = new FormData();
+        formData.append(FORM_FIELD_NAMES.note, selectedRating);
         
         Array.from(selectedOptions).forEach(option => {
-            addHiddenField(FORM_FIELD_NAMES.options, option); 
+            formData.append(FORM_FIELD_NAMES.options, option); 
         });
         
-        addHiddenField(FORM_FIELD_NAMES.commentaire, comments);
-        addHiddenField(FORM_FIELD_NAMES.nomEntreprise, company); 
-        addHiddenField(FORM_FIELD_NAMES.urlLogo, logo);         
+        formData.append(FORM_FIELD_NAMES.commentaire, comments);
+        formData.append(FORM_FIELD_NAMES.nomEntreprise, company); 
+        formData.append(FORM_FIELD_NAMES.urlLogo, logo);         
 
-        // Soumettre le formulaire
-        form.submit();
-        
-        // Nettoyer le formulaire temporaire APRES UN COURT DÉLAI pour s'assurer de la soumission
-        // Le setTimeout permet au navigateur de traiter la soumission avant de retirer le formulaire.
-        setTimeout(() => {
-            document.body.removeChild(form); 
-        }, 500); // Retirer après 500ms (0.5 seconde)
+        try {
+            const response = await fetch(FORMSPREE_ACTION_URL, {
+                method: 'POST',
+                body: formData,
+                headers: { 
+                    'Accept': 'application/json' 
+                }
+            });
 
-        // Afficher le message de remerciement IMMÉDIATEMENT
-        feedbackLowScore.classList.add('hidden');
-        thankYouMessage.classList.remove('hidden');
-        initialFeedbackSection.classList.add('hidden'); 
+            if (response.ok) { 
+                console.log("Feedback envoyé à Formspree Immobilier avec succès !");
+                feedbackLowScore.classList.add('hidden');
+                thankYouMessage.classList.remove('hidden');
+                initialFeedbackSection.classList.add('hidden'); 
 
-        console.log("Tentative d'envoi du feedback au Google Form Immobilier via iframe !");
+                // TRÈS IMPORTANT : La première soumission à un nouveau formulaire Formspree
+                // enverra un e-mail de confirmation à l'adresse associée au formulaire.
+                // Tu DOIS cliquer sur le lien de confirmation dans cet e-mail pour activer le formulaire.
+                // Après cette vérification, toutes les soumissions fonctionneront normalement.
+            } else {
+                const errorData = await response.json(); 
+                console.error("Erreur lors de l'envoi du feedback à Formspree. Statut :", response.status, "Erreur:", errorData);
+                alert("Une erreur est survenue lors de l'envoi de votre feedback. Veuillez réessayer. Code: " + response.status);
+            }
+
+        } catch (error) {
+            console.error("Erreur réseau ou autre lors de l'envoi du feedback à Formspree :", error);
+            alert("Une erreur est survenue lors de l'envoi de votre feedback. Veuillez réessayer.");
+        }
     });
 
     // Gestion du bouton "Retour"
