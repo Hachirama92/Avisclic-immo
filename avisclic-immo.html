@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avisclic - Immobilier</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="initial-feedback-section">
+            <img id="company-logo" src="" alt="Logo de l'entreprise" class="hidden">
+            <h1>Qu'avez-vous pensé de votre expérience chez <span id="company-name"></span> ?</h1>
+            <div class="stars" id="star-rating">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+        </div>
+
+        <div id="feedback-low-score" class="hidden">
+            <p class="feedback-message">Navré que cette expérience ne vous ait pas plu.</p>
+            <p>Que pouvons-nous améliorer ? (Choix multiples possibles)</p>
+            <div class="improvement-options">
+                <button class="option-button" data-option="Reactivite">Réactivité de l'agent</button>
+                <button class="option-button" data-option="Ecoute Besoins">Écoute des besoins</button>
+                <button class="option-button" data-option="Choix Biens">Choix des biens proposés</button>
+                <button class="option-button" data-option="Conseils Expert">Conseils et expertise</button>
+                <button class="option-button" data-option="Communication">Clarté de la communication</button>
+                <button class="option-button" data-option="Accompagnement">Accompagnement dans les démarches</button>
+            </div>
+            <textarea id="other-feedback" placeholder="Laissez un commentaire ici..."></textarea>
+            <button id="submit-low-score">Envoyer</button>
+            <button id="back-to-stars" class="secondary-button">Retour</button>
+        </div>
+        <div id="thank-you-message" class="hidden">
+            <h2>Merci pour votre feedback !</h2>
+            <p>Nous apprécions sincèrement votre temps et vos commentaires. Cela nous aidera à nous améliorer.</p>
+            <button id="reset-app" class="secondary-button">Fermer</button>
+        </div>
+    </div>
+
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { /* Ton code de remerciement ici si besoin */ }"></iframe>
+
+    <script src="script-immo.js"></script>
+</body>
+</html>

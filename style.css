@@ -1,0 +1,185 @@
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #eef2f6; /* Nouvelle couleur de fond */
+    margin: 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px; /* Coins plus arrondis */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Ombre plus prononcée et douce */
+    text-align: center;
+    width: 90%;
+    max-width: 550px; /* Plus large pour le contenu */
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #2c3e50; /* Couleur de titre plus douce */
+    margin-bottom: 30px;
+    font-size: 2em; /* Taille de titre ajustée */
+}
+
+.stars {
+    font-size: 4.5em; /* Étoiles légèrement plus grandes */
+    color: #d1d8e0; /* Couleur par défaut des étoiles (gris clair moderne) */
+    cursor: pointer;
+    margin-bottom: 35px;
+    letter-spacing: 5px; /* Espacement entre les étoiles */
+    display: inline-block; /* Pour centrer les étoiles */
+}
+
+.star {
+    transition: color 0.2s ease-in-out, transform 0.1s ease-in-out; /* Ajout d'une transition pour le transform */
+    display: inline-block; /* Pour appliquer le transform individuellement */
+}
+
+.star.selected {
+    color: #f39c12; /* Couleur des étoiles sélectionnées (orange plus vif) */
+}
+
+/* Correction de l'effet de survol des étoiles */
+.stars:not(.rated) .star:hover,
+.stars:not(.rated) .star:hover ~ .star {
+    color: #d1d8e0; /* Réinitialise les étoiles à droite de l'étoile survolée */
+}
+
+.stars:not(.rated) .star:hover,
+.stars:not(.rated) .star.hovered { /* Ajout de .hovered pour le JS */
+    color: #f39c12; /* Illumine l'étoile survolée */
+}
+.stars:not(.rated) .star:hover ~ .star.selected,
+.stars:not(.rated) .star.hovered ~ .star.selected {
+    color: #d1d8e0; /* S'assurer que les étoiles déjà sélectionnées ne restent pas éclairées si on survole une étoile à gauche */
+}
+
+/* S'assurer que les étoiles restent sélectionnées après le clic */
+.stars.rated .star.selected {
+    color: #f39c12;
+}
+
+.hidden {
+    display: none;
+}
+
+#feedback-low-score p {
+    margin-top: 25px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.feedback-message {
+    font-weight: bold;
+    color: #e74c3c; /* Message d'erreur en rouge */
+}
+
+.improvement-options {
+    margin-top: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; /* Espacement entre les boutons */
+    margin-bottom: 20px;
+}
+
+.option-button {
+    background-color: #f0f4f7; /* Couleur de fond des boutons neutre */
+    border: 1px solid #dcdcdc; /* Bordure légère */
+    padding: 12px 20px;
+    border-radius: 8px; /* Coins des boutons plus arrondis */
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    color: #555;
+}
+
+.option-button:hover {
+    background-color: #e0e6eb;
+    border-color: #c0c0c0;
+}
+
+.option-button.selected {
+    background-color: #3498db; /* Bleu vif pour sélection */
+    color: #fff;
+    border-color: #3498db;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3); /* Ombre pour sélection */
+}
+
+textarea {
+    width: calc(100% - 40px); /* Ajusté pour le padding */
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Coins arrondis */
+    resize: vertical;
+    min-height: 100px; /* Hauteur minimale augmentée */
+    font-size: 1em;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); /* Ombre interne subtile */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+button#submit-low-score {
+    background-color: #2ecc71; /* Vert pour l'envoi */
+    color: #fff;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.15em;
+    margin-top: 25px;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.2);
+}
+
+button#submit-low-score:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(46, 204, 113, 0.3);
+}
+
+.secondary-button {
+    background-color: #6c757d; /* Gris pour les actions secondaires */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    margin-top: 15px;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.secondary-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+#thank-you-message {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #e8f5e9; /* Fond vert clair pour le remerciement */
+    border: 1px solid #c8e6c9;
+    border-radius: 10px;
+    color: #2e7d32; /* Texte vert foncé */
+    font-size: 1.1em;
+}
+
+#thank-you-message h2 {
+    color: #2e7d32;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
