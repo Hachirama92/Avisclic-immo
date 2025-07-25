@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Récupérer les paramètres de l'URL
     const urlParams = new URLSearchParams(window.location.search);
-    const company = urlParams.get('nomEntreprise') || 'votre expérience'; // Valeur par défaut si non fourni
+    const company = urlParams.get('nomEntreprise') || 'votre expérience'; 
     const logo = urlParams.get('logoUrl');
-    const googleReviewUrlFromParam = urlParams.get('googleUrl') || 'https://www.google.com'; // Redirection par défaut si non fourni
+    const googleReviewUrlFromParam = urlParams.get('googleUrl') || 'https://www.google.com'; 
 
     // Mettre à jour le texte du titre
     companyNameSpan.textContent = company;
@@ -30,14 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
         companyLogo.src = logo;
         companyLogo.classList.remove('hidden');
     } else {
-        companyLogo.classList.add('hidden'); // S'assurer qu'il est caché s'il n'y a pas de logo
+        companyLogo.classList.add('hidden'); 
     }
 
-    // ⭐⭐⭐ INFORMATIONS PRÉCISES POUR FORMSPREE IMMOBILIER ⭐⭐⭐
-    // Ton URL Formspree fournie :
-    const FORMSPREE_ACTION_URL = 'https://formspree.io/f/xqalqbnn'; 
+    // ⭐⭐⭐ INFORMATIONS POUR FORMSPREE IMMOBILIER ⭐⭐⭐
+    // L'URL Formspree fournie pour l'immobilier :
+    const FORMSPREE_ACTION_URL = 'https://formspree.io/f/xqalqbnn';
     
-    // Noms des champs pour Formspree :
+    // Noms des champs pour Formspree (pour l'Immobilier) :
     const FORM_FIELD_NAMES = {
         note: 'Note_de_l_experience',             
         options: 'Options_d_amelioration',        
@@ -45,16 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
         nomEntreprise: 'Nom_Entreprise_Client',   
         urlLogo: 'URL_Logo_Client',         
     };
-    // ⭐⭐⭐ FIN DES INFOS PRÉCISES FORMSPREE IMMO ⭐⭐⭐
+    // ⭐⭐⭐ FIN DES INFOS FORMSPREE IMMOBILIER ⭐⭐⭐
 
 
     // Fonction pour mettre à jour l'affichage des étoiles
     function updateStarDisplay(ratingValue) { 
+        console.log(`[updateStarDisplay] Appelée avec ratingValue: ${ratingValue}`);
         stars.forEach((s, index) => {
             if (index < ratingValue) {
                 s.classList.add('selected');
+                console.log(`[updateStarDisplay] Étoile ${index + 1} a la classe 'selected'.`);
             } else {
                 s.classList.remove('selected');
+                console.log(`[updateStarDisplay] Étoile ${index + 1} n'a pas la classe 'selected'.`);
             }
         });
     }
@@ -97,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gestionnaire de clic sur étoile
     function handleStarClick() { 
         selectedRating = parseInt(this.dataset.value); 
-        
+        console.log(`[handleStarClick] Étoile cliquée: ${selectedRating}`);
         updateStarDisplay(selectedRating); 
         starRating.classList.add('rated'); 
 
@@ -109,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackLowScore.classList.remove('hidden');
             thankYouMessage.classList.add('hidden'); 
         } else {
-            window.location.href = googleReviewUrlFromParam;
+            window.location.href = googleReviewUrlFromParam; 
         }
     }
 
@@ -117,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleStarMouseOver() { 
         if (!starRating.classList.contains('rated')) { 
             const hoverValue = parseInt(this.dataset.value);
+            console.log(`[handleStarMouseOver] Survol de l'étoile: ${hoverValue}`);
             updateStarDisplay(hoverValue);
         }
     }
@@ -124,8 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gestionnaire de sortie de survol d'étoile
     function handleStarMouseOut() { 
         if (!starRating.classList.contains('rated')) { 
+            console.log("[handleStarMouseOut] Sortie de survol, réinitialisation.");
             updateStarDisplay(0); 
         } else { 
+            console.log(`[handleStarMouseOut] Sortie de survol, affichage de la note sélectionnée: ${selectedRating}.`);
             updateStarDisplay(selectedRating);
         }
     }
@@ -174,10 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 thankYouMessage.classList.remove('hidden');
                 initialFeedbackSection.classList.add('hidden'); 
 
-                // TRÈS IMPORTANT : La première soumission à un nouveau formulaire Formspree
-                // enverra un e-mail de confirmation à l'adresse associée au formulaire.
-                // Tu DOIS cliquer sur le lien de confirmation dans cet e-mail pour activer le formulaire.
-                // Après cette vérification, toutes les soumissions fonctionneront normalement.
             } else {
                 const errorData = await response.json(); 
                 console.error("Erreur lors de l'envoi du feedback à Formspree. Statut :", response.status, "Erreur:", errorData);
